@@ -11,7 +11,6 @@ use crate::AppState;
 
 /// Extract authenticated admin claims from the request.
 /// Checks Authorization header first, then falls back to cookie.
-#[axum::async_trait]
 impl FromRequestParts<AppState> for Claims {
     type Rejection = AppError;
 

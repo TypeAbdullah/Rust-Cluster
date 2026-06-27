@@ -15,19 +15,19 @@ impl Database {
             "INSERT INTO projects (id, name, description, repo_url, branch, build_command, start_command, runtime, status, env_vars, auto_deploy, created_at, updated_at)
              VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
             libsql::params![
-                project.id,
-                project.name,
-                project.description,
-                project.repo_url,
-                project.branch,
-                project.build_command,
-                project.start_command,
-                project.runtime,
-                project.status,
+                project.id.clone(),
+                project.name.clone(),
+                project.description.clone(),
+                project.repo_url.clone(),
+                project.branch.clone(),
+                project.build_command.clone(),
+                project.start_command.clone(),
+                project.runtime.clone(),
+                project.status.clone(),
                 env_json,
                 project.auto_deploy as i32,
-                project.created_at,
-                project.updated_at,
+                project.created_at.clone(),
+                project.updated_at.clone(),
             ],
         )
         .await
@@ -163,9 +163,15 @@ impl Database {
             "INSERT INTO deployments (id, project_id, commit_sha, commit_message, status, logs, trigger, created_at, finished_at)
              VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)",
             libsql::params![
-                deployment.id, deployment.project_id, deployment.commit_sha,
-                deployment.commit_message, deployment.status, deployment.logs,
-                deployment.trigger, deployment.created_at, deployment.finished_at,
+                deployment.id.clone(),
+                deployment.project_id.clone(),
+                deployment.commit_sha.clone(),
+                deployment.commit_message.clone(),
+                deployment.status.clone(),
+                deployment.logs.clone(),
+                deployment.trigger.clone(),
+                deployment.created_at.clone(),
+                deployment.finished_at.clone(),
             ],
         )
         .await?;
@@ -310,9 +316,14 @@ impl Database {
              VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
              ON CONFLICT(installation_id) DO UPDATE SET account_login=?2, account_type=?3, access_token=?4, token_expires_at=?5, repos_json=?6, updated_at=?8",
             libsql::params![
-                install.installation_id, install.account_login, install.account_type,
-                install.access_token, install.token_expires_at, repos_json,
-                install.created_at, install.updated_at,
+                install.installation_id.clone(),
+                install.account_login.clone(),
+                install.account_type.clone(),
+                install.access_token.clone(),
+                install.token_expires_at.clone(),
+                repos_json,
+                install.created_at.clone(),
+                install.updated_at.clone(),
             ],
         )
         .await?;
