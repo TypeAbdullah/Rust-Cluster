@@ -121,7 +121,7 @@ pub async fn deploy_project(
     State(state): State<AppState>,
     Path(id): Path<String>,
 ) -> Result<Json<Deployment>, AppError> {
-    let project = state.db.get_project(&id).await?;
+    let _project = state.db.get_project(&id).await?;
     let now = chrono::Utc::now().to_rfc3339();
 
     let deployment = Deployment {

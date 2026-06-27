@@ -4,10 +4,12 @@ pub mod queries;
 
 use libsql::{Builder, Connection};
 
+use std::sync::Arc;
+
 /// Database wrapper around libsql (local SQLite mode).
 #[derive(Clone)]
 pub struct Database {
-    db: libsql::Database,
+    db: Arc<libsql::Database>,
 }
 
 impl Database {
@@ -17,7 +19,7 @@ impl Database {
         let db = Builder::new_local("rustcluster.db")
             .build()
             .await?;
-        Ok(Self { db })
+        Ok(Self { db: Arc::new(db) })
     }
 
     /// Get a new connection from the database.

@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::db::models::{GitHubAppConfig, GitHubInstallation, GitHubRepoInfo};
-use crate::db::Database;
+use crate::db::models::GitHubRepoInfo;
 use crate::error::AppError;
 
 // ── GitHub App Manifest Flow ──────────────────────────────
@@ -306,7 +305,7 @@ pub async fn clone_with_token(
 
 /// Pull latest changes using an installation token.
 pub async fn pull_with_token(
-    token: &str,
+    _token: &str,
     repo_dir: &str,
     branch: &str,
 ) -> Result<String, AppError> {

@@ -98,7 +98,7 @@ impl ProcessManager {
             cmd.env(key, value);
         }
 
-        let mut child = cmd.spawn().map_err(|e| {
+        let child = cmd.spawn().map_err(|e| {
             crate::AppError::Internal(format!("Failed to spawn process: {}", e))
         })?;
 
@@ -150,14 +150,11 @@ impl ProcessManager {
         if let Some(stdout) = child.stdout.take() {
             let reader = BufReader::new(stdout);
             let mut lines = reader.lines();
-            let db_out = db.clone();
-            let pid_out = project_id.to_string();
             let name_out = project_name.to_string();
 
             tokio::spawn(async move {
                 while let Ok(Some(line)) = lines.next_line().await {
                     tracing::info!("[{}] {}", name_out, line);
-                    let _ = db_out; // logs are traced; could store in DB if needed
                 }
             });
         }
