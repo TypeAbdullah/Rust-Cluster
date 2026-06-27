@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: rustcluster
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: APP_URL
+        fromService:
+          type: web
+          name: rustcluster
+          property: host
+      - key: PORT
+        value: 8080
+    healthCheckPath: /health
