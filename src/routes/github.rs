@@ -93,6 +93,7 @@ pub async fn github_callback(
 
 /// GET /api/github/setup — GitHub redirects here after app installation
 #[derive(Deserialize)]
+#[allow(dead_code)]
 pub struct SetupQuery {
     installation_id: Option<String>,
     setup_action: Option<String>,

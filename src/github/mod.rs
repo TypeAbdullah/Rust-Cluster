@@ -85,6 +85,7 @@ pub async fn exchange_manifest_code(code: &str) -> Result<GitHubAppCreationRespo
 
 /// Response from GitHub when exchanging a manifest code.
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub struct GitHubAppCreationResponse {
     pub id: u64,
     pub slug: String,
@@ -98,6 +99,7 @@ pub struct GitHubAppCreationResponse {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub struct GitHubOwner {
     pub login: String,
 }
@@ -305,13 +307,19 @@ pub async fn clone_with_token(
 
 /// Pull latest changes using an installation token.
 pub async fn pull_with_token(
-    _token: &str,
+    token: &str,
     repo_dir: &str,
     branch: &str,
+    repo_url: &str,
 ) -> Result<String, AppError> {
-    // Set the remote URL with token
+    let authed_url = repo_url.replace(
+        "https://github.com/",
+        &format!("https://x-access-token:{}@github.com/", token),
+    );
+
+    // Update remote origin URL with refreshed token
     let _ = tokio::process::Command::new("git")
-        .args(["config", "credential.helper", "store"])
+        .args(["remote", "set-url", "origin", &authed_url])
         .current_dir(repo_dir)
         .output()
         .await;
@@ -325,6 +333,10 @@ pub async fn pull_with_token(
 
     let stdout = String::from_utf8_lossy(&output.stdout).to_string();
     let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+
+    if !output.status.success() {
+        return Err(AppError::Internal(format!("git pull failed: {}", stderr)));
+    }
 
     Ok(format!("{}{}", stdout, stderr))
 }

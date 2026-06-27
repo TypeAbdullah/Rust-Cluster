@@ -128,6 +128,7 @@ pub struct LoginRequest {
 
 /// Login response.
 #[derive(Debug, Serialize)]
+#[allow(dead_code)]
 pub struct LoginResponse {
     pub token: String,
     pub username: String,
@@ -138,6 +139,7 @@ pub struct LoginResponse {
 
 /// System stats response.
 #[derive(Debug, Serialize)]
+#[allow(dead_code)]
 pub struct SystemStats {
     pub cpu_usage: f32,
     pub memory_used: u64,
